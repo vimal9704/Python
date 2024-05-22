@@ -1,0 +1,13 @@
+- hosts: all
+  remote_user: ec2-user
+  become: yes
+  tasks:
+  - name: install multiple packages using LOOP
+    yum:
+      name: "{{item}}"
+      state: present
+    loop:
+      - mysql
+      - php
+      - unzip
+      - newtoolup  

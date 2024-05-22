@@ -1,0 +1,16 @@
+- hosts: all
+  remote_user: ec2-user
+  become: yes
+  tasks:
+  - name: install the latest version of Apache
+    yum:
+      name: httpd
+      state: latest
+  - name: Start service httpd, if not started
+    service:
+      name: httpd
+      state: started
+  - name: Copy index.html file to httpd host path
+    copy:
+      src: /home/ec2-user/index.html
+      dest: /var/www/html/index.html

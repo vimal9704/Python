@@ -1,0 +1,34 @@
+- hosts: all
+  remote_user: ec2-user
+  become: yes
+  vars:
+    port: 9090
+  tasks:
+  - name: Adding Jenkins repo 
+    yum_repository:
+      name: jenkins
+      description: Install jenkins repo
+      baseurl: http://pkg.jenkins.io/redhat-stable
+      gpgkey: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+  - name: Install the java and jenkins packages using loop
+    yum:
+      name: "{{item}}"
+      state: present
+    loop:
+      - java
+      - jenkins    
+  - name: Changing port number of jenkins
+    lineinfile:
+      path: /etc/sysconfig/jenkins
+      regexp: '^ENKINS_PORT='
+      line: JENKINS_PORT={{port}}  
+    notify: restart jenkins
+  - name: Starting Jenkins service
+    service:
+      name: jenkins
+      state: started
+  handlers:
+  - name: restart jenkins
+    service:
+      name: jenkins
+      state: restarted   
