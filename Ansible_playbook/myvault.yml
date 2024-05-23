@@ -1,0 +1,9 @@
+- hosts: all
+  remote_user: ec2-user
+  become: yes
+  vars_files:
+    secrets.yaml
+  tasks:
+  - name: testing ECHO command
+    debug:
+      msg: username is {{uname}} and password is {{pssd}}
